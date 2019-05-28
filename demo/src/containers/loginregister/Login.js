@@ -29,7 +29,7 @@ const Login = ({
             if (values.type) {
                 doLoginByToken(values.username, values.password)
             } else {
-                doLogin('caoxinhong11', '123456')
+                doLogin(values.username, values.password)
             }
         })
     }
@@ -54,7 +54,8 @@ const Login = ({
                             {
                                 required: false
                             }
-                        ]
+                        ],
+                        initialValue: 'caoxinhong11'
                     })(<Input size="large" onPressEnter={handleOk} placeholder={I18N.username}/>)}
                 </FormItem>
                 <FormItem hasFeedback>
@@ -63,7 +64,8 @@ const Login = ({
                             {
                                 required: false
                             }
-                        ]
+                        ],
+                        initialValue: '123456'
                     })(<Input size="large" type="password" onPressEnter={handleOk} placeholder={I18N.password}/>)}
                 </FormItem>
                 <FormItem hasFeedback>{getFieldDecorator("type")(<Checkbox>{I18N.tokenSignin}</Checkbox>)}</FormItem>
