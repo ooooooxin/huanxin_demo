@@ -222,6 +222,8 @@ class Chat extends React.Component {
             ]
         }
 
+        //tabs设置菜单按钮
+
         const tabsItem = tabs.map(([key, name, icon]) =>
             <Menu.Item key={key}>
                 <i className={icon} style={{ fontSize: 20, marginRight: 12, verticalAlign: "middle" }} />

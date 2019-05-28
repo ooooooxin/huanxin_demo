@@ -35,7 +35,7 @@ class DefaultLayout extends Component {
 
         // console.log(selectTab, selectItem, "-----")
 
-        this.state = {
+        this.state = {//顶部菜单配置
             collapsed: breakpoint[SIDER_COL_BREAK],
             selectTab: selectTab,
             selectItem: selectItem,
@@ -358,12 +358,13 @@ class DefaultLayout extends Component {
             <Layout>
                 <Header className="header">
                     <HeaderOps title={login.username} />
-                    <HeaderTab
+                    {/* 隐藏菜单 */}
+                    {/* <HeaderTab 
                         collapsed={collapsed}
                         items={headerTabs}
                         selectedKeys={[ selectTab ]}
                         onClick={this.changeTab}
-                    />
+                    /> */}
                 </Header>
                 <Content className="x-layout-main">
                     <div

@@ -6,6 +6,7 @@ import { config } from "@/config"
 import styles from "./index.less"
 import LoginActions from "@/redux/LoginRedux"
 import WebIM from "@/config/WebIM"
+import { store } from "@/redux"
 
 const FormItem = Form.Item
 
@@ -28,15 +29,17 @@ const Login = ({
             if (values.type) {
                 doLoginByToken(values.username, values.password)
             } else {
-                doLogin(values.username, values.password)
+                doLogin('caoxinhong11', '123456')
             }
         })
     }
 
+
+
     // const a = {}
     // const b = a.b.c
     // console.log(messageList, "---")
-
+ 
     const logo = WebIM.config.i18n == "cn" ? <i className='font'>V</i> : <i className="iconfont icon-hyphenate"/>
     return (
         <div className="form x-login">
@@ -49,7 +52,7 @@ const Login = ({
                     {getFieldDecorator("username", {
                         rules: [
                             {
-                                required: true
+                                required: false
                             }
                         ]
                     })(<Input size="large" onPressEnter={handleOk} placeholder={I18N.username}/>)}
@@ -58,7 +61,7 @@ const Login = ({
                     {getFieldDecorator("password", {
                         rules: [
                             {
-                                required: true
+                                required: false
                             }
                         ]
                     })(<Input size="large" type="password" onPressEnter={handleOk} placeholder={I18N.password}/>)}
@@ -78,13 +81,18 @@ const Login = ({
             </div>
         </div>
     )
+
+
 }
+
 
 Login.propTypes = {
     form: PropTypes.object,
     login: PropTypes.object,
     dispatch: PropTypes.func
 }
+
+//store.dispatch(LoginActions.login('caoxinhong11', '123456'))//默认账号登录
 
 export default connect(
     ({ login, i18n }) => ({

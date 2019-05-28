@@ -22,7 +22,7 @@ WebIM.loglevel = loglevel
 // replace all console.log with loglevel.info
 // console.log = loglevel.info
 
-WebIM.conn = new websdk.connection({
+WebIM.conn = new websdk.connection({//创建连接
     isHttpDNS: WebIM.config.isHttpDNS,
     isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
     https: WebIM.config.https,

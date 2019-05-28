@@ -23,8 +23,8 @@ function getUrl(){
         xmppUrl = "im-api-hsb.easemob.com"
     }
     return {
-        apiUrl: apiUrl,
-        xmppUrl: xmppUrl
+        apiUrl: apiUrl,// rest Server地址，
+        xmppUrl: xmppUrl //xmpp Server地址，对于在console.easemob.com创建的appKey，固定为该值
     }
 }
 
@@ -47,7 +47,7 @@ var config = {
     /*
      * Application AppKey
      */
-    appkey: "easemob-demo#chatdemoui",
+    appkey: "easemob-demo#chatdemoui",// App key
     /*
      * Application Host
      */
@@ -56,14 +56,14 @@ var config = {
      * Whether to use HTTPS
      * @parameter {Boolean} true or false
      */
-    https: false,
-    isHttpDNS: false,
+    https: false, // 是否使用https
+    isHttpDNS: false,//防止DNS劫持从服务端获取XMPPUrl、restUrl
     /*
      * isMultiLoginSessions
      * true: A visitor can sign in to multiple webpages and receive messages at all the webpages.
      * false: A visitor can sign in to only one webpage and receive messages at the webpage.
      */
-    isMultiLoginSessions: false,
+    isMultiLoginSessions: false,  // 是否开启多页面同步收消息，注意，需要先联系商务开通此功能
     /**
      * Whether to use window.doQuery()
      * @parameter {Boolean} true or false
@@ -79,7 +79,7 @@ var config = {
      * Whether to console.log in strophe.log()
      * @parameter {Boolean} true or false
      */
-    isDebug: true,
+    isDebug: true, // 打开调试，会自动打印log，在控制台的console中查看log
     /**
      * Whether to show logs in strophe
      * @parameter {Boolean} true or false
@@ -89,12 +89,12 @@ var config = {
      * will auto connect the xmpp server autoReconnectNumMax times in background when client is offline.
      * won't auto connect if autoReconnectNumMax=0.
      */
-    autoReconnectNumMax: 5,
+    autoReconnectNumMax: 5, // 断线重连最大次数
     /**
      * the interval secons between each atuo reconnectting.
      * works only if autoReconnectMaxNum >= 2.
      */
-    autoReconnectInterval: 2,
+    autoReconnectInterval: 2, // 断线重连时间间隔
     /**
      * webrtc supports WebKit and https only
      */
@@ -107,7 +107,7 @@ var config = {
     /*
      * Set to auto sign-in
      */
-    isAutoLogin: true,
+    isAutoLogin: true, // 自动出席，（如设置为false，则表示离线，无法收消息，需要在登录成功后手动调用conn.setPresence()才可以收消息）
     /**
      * Size of message cache for person to person
      */
@@ -117,7 +117,7 @@ var config = {
      * sender, in order to tell the sender the message has delivered.
      * See call back function onReceivedMessage
      */
-    delivery: true,
+    delivery: true, // 是否发送已读回执
     /**
      * Size of message cache for group chating like group, chatroom etc
      */

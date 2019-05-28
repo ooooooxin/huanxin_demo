@@ -9,7 +9,7 @@ import { history } from "@/utils"
 import { store } from "@/redux"
 /* ------------- Types and Action Creators ------------- */
 
-const { Types, Creators } = createActions({
+const { Types, Creators } = createActions({//注册请求
 
     jumpLogin: null,
     registerRequest: [ "username", "password", "nickname" ],

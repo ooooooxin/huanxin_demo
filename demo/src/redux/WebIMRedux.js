@@ -24,13 +24,16 @@ import { message } from "antd"
 
 const logger = WebIM.loglevel.getLogger("WebIMRedux")
 
-WebIM.conn.listen({
+WebIM.conn.listen({//添加回调函数
     // success connect to xmpp
-    onOpened: msg => {
+    onOpened: msg => { //连接成功回调
+        // 如果isAutoLogin设置为false，那么必须手动设置上线，否则无法收消息
+        // 手动上线指的是调用conn.setPresence(); 如果conn初始化时已将isAutoLogin设置为true
+        // 则无需调用conn.setPresence();     
         const username = store.getState().login.username
         const token = utils.getToken()
         const hash = utils.getHash()
-        console.log(history)
+        console.log('history',history)
         // TODO all path could visited by anonymous should be declared directly
         const path = history.location.pathname.indexOf("login") !== -1 ? "/contact" : history.location.pathname
         const redirectUrl = `${path}?username=${username}`
@@ -38,6 +41,7 @@ WebIM.conn.listen({
         // init local db
         AppDB.init(username)
 
+        console.log('username',username)
         // get unread message number from localdb
         store.dispatch(MessageActions.initUnread())
 
@@ -60,6 +64,7 @@ WebIM.conn.listen({
         // store.dispatch(ChatRoomActions.getChatRooms())
 
         store.dispatch(LoginActions.stopLoging())
+     
 
         // refresh page
         hash.indexOf(redirectUrl) === -1 && history.push(redirectUrl)
@@ -76,7 +81,7 @@ WebIM.conn.listen({
             
         // }
     },
-    onPresence: msg => {
+    onPresence: msg => {//处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
         // console.log("onPresence", msg, store.getState())
         switch (msg.type) {
         case "joinGroupNotifications":
@@ -152,8 +157,8 @@ WebIM.conn.listen({
         }
     },
     // handle all exception
-    onError: error => {
-        console.log(error)
+    onError: error => { //失败回调
+        console.log('error',error)
         // 16: server-side close the websocket connection
         if (error.type == WebIM.statusCode.WEBIM_CONNCTION_DISCONNECTED) {
             console.log(
@@ -183,7 +188,7 @@ WebIM.conn.listen({
             return
         }
         // 8: offline by multi login
-        if (error.type == WebIM.statusCode.WEBIM_CONNCTION_SERVER_ERROR) {
+        if (error.type == WebIM.statusCode.WEBIM_CONNCTION_SERVER_ERROR) {//多重登录，登出
             console.log("WEBIM_CONNCTION_SERVER_ERROR")
             message.error(`${I18n.t("offlineByMultiLogin")}`)
             history.push("/login")
@@ -195,28 +200,28 @@ WebIM.conn.listen({
             store.dispatch(LoginActions.loginFailure(error))
         }
     },
-    onClosed: msg => {
+    onClosed: msg => { //连接关闭回调
         console.log("onClosed", msg)
         // msg.msg && message.error(msg.msg)
         store.dispatch(Creators.logoutSuccess())
     },
-    onBlacklistUpdate: list => {
+    onBlacklistUpdate: list => { //黑名单变动
         store.dispatch(BlacklistActions.updateBlacklist(list))
     },
-    onReadMessage: message => {
+    onReadMessage: message => {//收到消息已读回执
         logger.info("onReadMessage", message)
         store.dispatch(MessageActions.updateMessageStatus(message, "read"))
     },
-    onDeliveredMessage: message => {
+    onDeliveredMessage: message => {//收到消息送达客户端回执
         logger.info("onDeliveredMessage", message)
         // store.dispatch(MessageActions.updateMessageStatus(message, "sent"))
     },
-    onReceivedMessage: message => {
+    onReceivedMessage: message => { //收到消息送达服务器回执
         logger.info("onReceivedMessage", message)
         const { id, mid } = message
         store.dispatch(MessageActions.updateMessageMid(id, mid))
     },
-    onTextMessage: message => {
+    onTextMessage: message => {//收到文本消息
         console.log("onTextMessage", message)
         const { from, to } = message 
         let { type } = message       
@@ -261,7 +266,7 @@ WebIM.conn.listen({
             break
         }
     },
-    onPictureMessage: message => {
+    onPictureMessage: message => {//收到图片消息
         console.log("onPictureMessage", message)
         store.dispatch(MessageActions.addMessage(message, "img"))
         store.dispatch(MessageActions.sendRead(message))
@@ -280,7 +285,7 @@ WebIM.conn.listen({
             break
         }
     },
-    onFileMessage: message => {
+    onFileMessage: message => {//收到文件消息
         store.dispatch(MessageActions.addMessage(message, "file"))
         store.dispatch(MessageActions.sendRead(message))
         const { type, from, to } = message
@@ -298,7 +303,7 @@ WebIM.conn.listen({
             break
         }
     },
-    onAudioMessage: message => {
+    onAudioMessage: message => { //收到音频消息
         store.dispatch(MessageActions.addAudioMessage(message, "audio"))
         store.dispatch(MessageActions.sendRead(message))
         const { type, from, to } = message
@@ -316,7 +321,7 @@ WebIM.conn.listen({
             break
         }
     },
-    onVideoMessage: message => {
+    onVideoMessage: message => { //收到视频消息
         store.dispatch(MessageActions.addMessage(message, "video"))
         store.dispatch(MessageActions.sendRead(message))
         const { type, from, to } = message
@@ -334,13 +339,13 @@ WebIM.conn.listen({
             break
         }
     },
-    onInviteMessage: msg => {
+    onInviteMessage: msg => {//处理群组邀请
         console.log("onInviteMessage", msg)
         store.dispatch(GroupRequestActions.addGroupRequest(msg))
         store.dispatch(GroupActions.getGroups())
         message.success(`${msg.from}${I18n.t("invite")}${I18n.t("you")}${I18n.t("join")}${msg.roomid}`)
     },
-    onMutedMessage: msg => {
+    onMutedMessage: msg => { //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
         console.log("onMutedMessage", msg)
         store.dispatch(MessageActions.muteMessage(msg.mid))
         message.error(`${I18n.t("you")}${I18n.t("muted")}`)

@@ -79,7 +79,7 @@ class App extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount() {//第一次渲染后调用
         // 1. check user auth by cookie
         const { hasToken } = this.state
         const { loginByToken } = this.props
@@ -88,7 +88,7 @@ class App extends Component {
         }
     }
 
-    componentWillReceiveProps() {}
+    componentWillReceiveProps() {}// 在组件接收到一个新的 prop (更新后)时被调用。这个方法在初始化render时不会被调用。
 
     render() {
         const { isLogin, token, isLoading } = this.props
@@ -112,6 +112,8 @@ class App extends Component {
                 </Switch>
             </div>
         )
+
+        
     }
 }
 
